@@ -1,0 +1,173 @@
+Corridor-Walker ajuda pessoas cegas a reconhecer obstáculos e interseções.
+O utilizador pode utilizar o sistema para detetar uma interseção e reconhecer
+o caminho a que esta leva, enquanto ao mesmo tempo evita obstáculos.
+
+CONTEXTO:
+-> Navegar num corredor fechado pode ser difícil para pessoas cegas:
+	- estas têm que ter noção dos obstáculos enquanto reconhecem as
+interseções que que as levam ao destino;
+	- confiam nas paredes à sua volta para avançar
+	- obstáculos no chão ou na parede (elevados)
+	
+WHY THE SISTEM:
+	Vantagens:
+	> fornece um caminho que evita os obstáculos (e não indicca só a 
+	existência dos mesmos)
+	> não precisa de um cão-guia
+	> não precisa de hardware especial ou wearable devices
+	> apenas precisa do smartphone
+	> melhor reconhecimento de interseções e da sua forma (com o pau nem
+sempre detetam isto)
+
+	>TESTE feito: caminho entre corredores onde não existe rotas 
+estáticas, mas o utilizador sabe para onde tem de virar nas interseções.
+
+
+COMO FUNCIONA:
+	- Construção do mapa, dps, determinação do custo e planeamento do 
+caminho/ processamento da imagem e deteção de interseções;	
+	- Mapa construído usando LiDAR que gera nuvem de pontos até 5m
+distância. Se o vetor normal do ponto for paralelo ao vetor gravidade e 
+estiver a uma altura de 0.1m relativa ao chão, então esse ponto é 
+considerado uma área caminhável. Os pontos são atualizados cada vez que 
+são observados, permitindo ao sistema detetar objetos dinâmicos,como 
+pessoas e robôs de limpeza.
+	- Gera caminho por forma a evitar obstáculos usando o algoritmo A*;
+	- Para distinguir um obstáculo de uma parede usa o algoritmo RANSAC;
+	- Para detetar interseções utiliza o YOLO v3;	
+
+	- O sistema dá feedback ao user por TTS(Text to speech), audio 
+espacializado e vibrações. O audio espacializado foca-se na correta orientação
+do utilizador, sendo que o sistema emite um áudio quando o user está com 
+orientação errada. Para detetar obstaculos é usado vibração contínua
+(objeto a menos de um metro) e TTS(a menos de 2 metros indica para onde virar).
+Interseções são indicadas com vibrações intercaladas (a 2m e meio da interseção),
+e TTS quando se encontra mesmo nela.
+
+ESTUDO:
+	> 14 participantes cegos
+	> 3 tarefas: 
+		- 1ª, participantes confrontados com diversos tipos de interseções,
+		tinham de identificar a interseção e virar.
+		- 2ª, evitar obstáculos no corredor.
+		- 3ª, navegar num corredor com obstáculos e interseções
+	> Feito numa universidade
+	> 120-150 min por participante
+	> 90$ por participante
+	> Ordem random das rotas
+	> No final users avaliaram o sistema usando a SUS(System usability scale)
+	
+EXPERIÊNCIA DO DIA A DIA DOS PARTICIPANTES ANDAREM EM CORREDORES FECHADOS:
+	Obstáculos:
+	- Todos batem em obstáculos com a cana para os detetarem;
+	- Para 6 dificuldades em detetar objetos com partes inferiores ocas(cadeiras por ex)
+	- 3 participantes dificuldades em detetar objetos de altura baixa;
+	
+	Interseções:
+	- 12 participantes caminham ao pé da parede e utilizam a cana
+	para detetar interseções;
+	- 10 ouvem os sons do ambiente;
+	- 9 detetam o fluxo de ar;
+	- 7 já passaram por uma interseção sem se aperceberem;
+	- 2 passaram por 1 interseção qnd estavam distraidos;
+	- 5 passaram por interseçao qnd estavam a evitar obstaculos;
+	
+	Correta Orientação:
+	- 9 disseram que é difícil andar direitos num corredor.
+
+TAREFA 1:
+	Identificar a forma de uma interseção e virar numa direção específica
+(esquerda ou direita).
+
+	- Participantes colocados entre 6 a 10 metros antes da interseção;
+	- Posição inicial aleatória;
+	- Diferentes formas de interseção como na figura;
+	
+TAREFA 2:
+	Evitar obstáculos.
+
+	- 2 corredores, 1 com 2 obstáculos(caixa e lixo)e outro com 4 (inclui 
+	cadeiras);
+	- participantes colocados entre 3 a 6m da entrada do corredor.
+
+TAREFA 3:
+	Andar em corredor com várias interseções e obstáculos.
+	
+	- corredor 1: 3 interseçoes e 3 obstáculos
+	- corredor 2: 4 interseções e 4 obstáculos
+
+PROCEDIMENTO
+	> entrevista para saber experiências diárias em ambientes interiores;	
+	> sessão de treino de 30 min;
+	> em cada tarefa participantes experimentaram interseções de forma
+aleatória, com e sem ajuda do sistema (mas sempre com cana).
+	
+	> 1ª metade dos participantes caminhou em interseções e rotas apenas
+com a cana dos ceguinhos e, nas interseções e rotas invertidas horizontalmente
+com ajuda do sistema. A outra metade foi ao contrário.
+	
+	> No final pediram aos participantes para classificar (1-7) um conjunto 
+	de perguntas/declarações; (1- discordo fortemente, 7- concordo fortemente)
+	Cada pergunta/declaração foi feita tanto para o sistema como para 
+	apenas o pau do ceguinho.
+	> Depois avaliar o sistema na escala SUS.
+	> Foram tbm feitas perguntas de respota aberta para recolher + feedback.
+
+MÉTRICAS:
+	>Para a primeira tarefa, mediram a percentagem de participantes que conseguiram dizer corretamente o formato da interseção
+
+	>Tempo para completar a tarefa:
+	- Para a primeira tarefa, mediram o tempo que o participante demorou até 
+fazer a interseção;
+	- Para as outras tarefas, mediram o tempo que o participante demorou a 
+fazer a rota completa.
+
+	>Número de contactos em obstáculos/paredes com o pau dos ceguinhos:
+	- Para cada tarefa, mediram o número de vezes que o participante teve 
+contacto com um obstáculo ou parede com o pau dos ceguinhos. Isto foi feito ao 
+ver os vídeos feitos durante as experiências.No caso da primeira tarefa, só 
+mediram o número de contactos com a parede, pois não foram usados obstáculos.
+
+RESULTADOS: OVERALL PERFORMANCE DO SISTEMA?
+	Formas das interseções respondidas corretamente:
+		- Para a primeira tarefa, as percentagens para as 
+		formas L,T, T rodado e X, foram 71.4%, 21.4%, 28.6%, e 0% 
+		quando apenas o pau dos ceguinhos foi usado 
+		e, 92.9%,92.9%, 100%, e 50.0% quando também usaram o sistema.
+
+	Razões para os participantes terem falhado algumas interseções com
+	o sistema:
+		- Os participantes apenas falharam, embora o sistema tenha 
+		sido correto (aconteceu 1x em L, 1x em T rodado e, 3x em X); 
+		O mapeamento do sistema falhou porque o participante segurou 
+		o telemóvel de forma instável, causando um mau funcionamento 
+		do  YOLOv3 (aconteceu 1x em X).
+
+RESULTADOS: TEMPO PARA CONCLUSÃO DE TAREFA
+	Condições estudadas: Ordem das condições com que eles começaram as
+tarefas, rotas invertidas, utilização apenas do pau dos ceguinhos e utilização
+do sistema. Apenas utilização do pau dos ceguinhos e do sistema afetaram os resultados.
+	
+	Tarefas com o sistema demoraram mais tempo porque os participantes 
+tendiam a andar devagar para seguir as instruções e re-orientarem-se enquanto 
+andavam. Também demoraram mais porque tinham de parar para fazer o scan do 
+ambiente para confirmar a forma da interseção.
+
+RESULTADOS: CONTACTOS
+	Em número de contactos, é possível ver que em todas as tarefas 
+houve um número reduzido de contactos quando o sistema foi usado.
+
+CONCLUSÃO:
+	Embora os participantes tenham demorado mais tempo a navegar num corredor, 
+o sistema conseguiu com sucesso fazer com que todos os participantes 
+navegassem num corredor, ajudando a desviar de obstáculos e a reconhecer 
+interseções;
+	O sistema fez com que os participantes tivessem menos contacto com 
+obstáculos e paredes com o pau dos ceguinhos;
+	O sistema melhorou a experiência dos participantes no geral, pois 
+ajuda a evitar obstáculos, a re-orientarem-se, a prevenir que passassem 
+por interseções sem repararem, a perceber a forma da interseção e a criar 
+um mapa mental.
+
+
+
